@@ -1,0 +1,186 @@
+/* style.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: #1a1a1a;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+/* 屏幕模拟区域 */
+.screen-simulator {
+    flex: 0 0 60%;
+    background: #2d2d2d;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.brain-container {
+    position: relative;
+    width: 100%;
+    /* height: 0; */
+    padding-bottom: 72%;
+    /* 保持图片原始比例 */
+    overflow: hidden;
+    background: url('./assets/brain.png') repeat left top;
+    background-size: cover;
+    transform-origin: left top;
+}
+
+#screenCanvas {
+    /* 基于背景图的实际屏幕位置计算百分比 */
+    position: absolute;
+    left: 11.75%;
+    /* 与背景图屏幕区域对齐 */
+    top: 31.8%;
+    /* 与背景图屏幕区域对齐 */
+    width: 68%;
+    /* 480/900 ≈ 53% */
+    height: 45.6%;
+    /* 240/528 ≈ 45.5% */
+    /* background: #7f2020; */
+    z-index: 2;
+
+    /* 确保画布内容不模糊 */
+    /* image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor; */
+    
+}
+#screenCanvas {
+    image-rendering: crisp-edges;
+    image-rendering: -webkit-optimize-contrast; /* 添加 Edge 支持 */
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+/* 添加媒体查询处理不同尺寸 */
+@media (max-width: 1600px) {
+    .brain-container {
+        padding-bottom: 72%;
+
+    }
+}
+
+@media (max-width: 1200px) {
+    .brain-container {
+        padding-bottom: 72%;
+    }
+}
+
+
+/* 代码编辑器区域 */
+.code-editor {
+    flex: 1;
+    background: #2d2d2d;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.editor-header {
+    background: #3c3c3c;
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#codeInput {
+    width: 100%;
+    height: 70vh;
+    /* 固定高度 */
+    padding: 1rem;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    border: none;
+    resize: none;
+    font-family: 'Consolas', monospace;
+    font-size: 14px;
+}
+
+#codeInput:focus {
+    outline: 1px solid #3c3c3c;
+}
+
+/* 按钮样式 */
+.run-btn {
+    background: #28a745;
+    padding: 6px 12px;
+}
+
+.run-btn:hover {
+    background: #218838;
+}
+
+.stop-btn {
+    background: #dc3545;
+}
+
+.stop-btn:hover {
+    background: #c82333;
+}
+
+.reset-btn {
+    background: #007bff;
+}
+
+.reset-btn:hover {
+    background: #0069d9;
+}
+
+.disabled {
+    background: #6c757d !important;
+    cursor: not-allowed;
+}
+
+/* 文件上传 */
+.file-upload {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.upload-btn {
+    background: #007bff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.error-output {
+    background: rgba(192, 57, 43, 0.3);
+    color: #ffcccc;
+    padding: 0.5rem;
+    display: none;
+}
+
+footer {
+    background: #2d2d2d;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+}
