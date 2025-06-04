@@ -1,4 +1,4 @@
-from browser import document, window, alert, timer
+from browser import document, window, alert, timer,aio
 import javascript
 
 import time
@@ -22,23 +22,12 @@ class vexEnum:
         return self.name
 
 
-def wait(ms: int):
-    '''### delay the current thread for the provided number of seconds or milliseconds.
+# 简单实现wait函数
+def wait(ms):
+    """使用JavaScript的setTimeout实现阻塞等待"""
+    # 创建一个Promise对象来实现阻塞效果
 
-    #### Arguments:
-        duration: The number of seconds or milliseconds to sleep for
-        units:    The units of duration, optional, default is milliseconds
-
-    #### Returns:
-        None
-    '''
-    # window.performance.now()
-    # javascript.Date.new().getTime()
-
-    start = window.performance.now()
-    while window.performance.now() - start < ms:
-        pass
-
+    return aio.sleep(ms / 1000)
 
 class Color:
     BLACK = "#000000"
@@ -77,14 +66,6 @@ class Brain:
 
 class Screen:
     def __init__(self):
-        self.canvas = document["screenCanvas"]
-        self.ctx = self.canvas.getContext("2d")
-        self.ctx.lineWidth = 1
-        self.ctx.strokeStyle = "#FFFFFF"
-        self.ctx.fillStyle = "#000000"
-        self.ctx.font = "12px Monospace"
-        self.ctx.textAlign = "left"
-        self.ctx.textBaseline = "bottom"
 
         self._row = 0
         self._col = 0
@@ -92,6 +73,15 @@ class Screen:
         self._originy = 0
         self.pen_color = Color.WHITE
         self.fill_color = Color.BLACK
+
+        self.canvas = document["screenCanvas"]
+        self.ctx = self.canvas.getContext("2d")
+        self.ctx.lineWidth = 1
+        self.ctx.strokeStyle = self.pen_color
+        self.ctx.fillStyle = self.fill_color
+        self.ctx.font = "12px Monospace"
+        self.ctx.textAlign = "left"
+        self.ctx.textBaseline = "bottom"
 
     def set_cursor(self, row: int, col: int):
         '''### Set the cursor position used for printing text on the screen
@@ -198,31 +188,34 @@ window.Color = Color
 # 执行代码的函数
 
 
-def run_code(ev):
+# 执行代码的函数（支持异步）
+async def run_code_async():
     try:
-        code = document["codeInput"].value
         # 清空画布
-        Brain().screen.clear_screen()
-        # 更新状态
-        document["status"].text = "Executing code..."
-        document["status"].className = "status info"
-        # 执行代码
-        # 提供必要的全局变量
+        brain = Brain()
+        brain.screen.clear_screen()
+        
+        # 获取代码
+        code = document["codeInput"].value
+        
+        # 准备全局变量
         exec_globals = {
             "Brain": Brain,
             "wait": wait,
-            "vexEnum": vexEnum,
-            "Color": Color,
-            "__name__": "__main__"
+            "__name__": "__main__",
+            "brain": brain  # 提供预创建的实例
         }
+        
+        # 执行用户代码
+        document["status"].text = "执行代码中..."
         exec(code, exec_globals)
-        # 成功消息
-        document["status"].text = "Code executed successfully!"
-        document["status"].className = "status success"
+        document["status"].text = "代码执行成功!"
     except Exception as e:
-        document["errorOutput"].text = f"Error: {str(e)}"
-        document["errorOutput"].className = "status error"
-# 清空画布的函数
+        document["status"].text = f"错误: {str(e)}"
+
+def run_code(ev):
+    # 使用aio.run运行异步代码
+    aio.run(run_code_async())
 
 
 def clear_canvas(ev):
