@@ -189,7 +189,7 @@ window.Color = Color
 
 
 # 执行代码的函数（支持异步）
-async def run_code_async():
+def run_code(ev):
     try:
         # 清空画布
         brain = Brain()
@@ -213,9 +213,7 @@ async def run_code_async():
     except Exception as e:
         document["status"].text = f"错误: {str(e)}"
 
-def run_code(ev):
-    # 使用aio.run运行异步代码
-    aio.run(run_code_async())
+
 
 
 def clear_canvas(ev):
