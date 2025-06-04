@@ -1,10 +1,6 @@
-from browser import document, window, alert, timer,aio
+from browser import document, window, alert, timer, aio, console
 import javascript
-
-import time
-# from typing import Union
-# from typing import Any
-
+import sys
 
 class vexEnum:
     '''Base class for all enumerated types'''
@@ -21,13 +17,9 @@ class vexEnum:
     def __repr__(self):
         return self.name
 
-
 # 简单实现wait函数
 def wait(ms):
-    """使用JavaScript的setTimeout实现阻塞等待"""
-    # 创建一个Promise对象来实现阻塞效果
-
-    return aio.sleep(ms / 1000)
+    pass
 
 class Color:
     BLACK = "#000000"
@@ -57,16 +49,13 @@ class Color:
             r, g, b = args
             return f"#{r:02x}{g:02x}{b:02x}"
 
-
 # 创建模拟的Brain和Screen类
 class Brain:
     def __init__(self):
         self.screen = Screen()
 
-
 class Screen:
     def __init__(self):
-
         self._row = 0
         self._col = 0
         self._originx = 0
@@ -84,60 +73,23 @@ class Screen:
         self.ctx.textBaseline = "bottom"
 
     def set_cursor(self, row: int, col: int):
-        '''### Set the cursor position used for printing text on the screen
-
-        row and column spacing will take into account the selected font.\\
-        The base cell size if 10x20 pixels for the MONO20 font.\\
-        text may not accurately print if using a proportional font.\\
-        The top, left corner of the screen is position 1,1
-
-        #### Arguments:
-            row : The cursor row
-            col : The cursor column
-
-        #### Returns:
-            None
-        '''
         self._row = row
         self._col = col
 
     def column(self):
-        '''Return the current column where text will be printed'''
         return self._col
 
     def row(self):
-        '''Return the current row where text will be printed'''
         return self._row
 
     def set_origin(self, x: int, y: int):
-        '''### Set the origin used for drawing graphics on the screen
-
-        drawing functions consider the top left corner of the screen as the origin.\\
-        This function can move the origin to an alternate position such as the center of the screen.
-
-        #### Arguments:
-            x : The origins x position relative to top left corner
-            y : The origins y position relative to top left corner
-
-        #### Returns:
-            None
-        '''
         self._originx = x
         self._originy = y
 
     def set_pen_width(self, width: int):
-        '''### Set the pen width used for drawing lines, rectangles and circles
-
-        #### Arguments:
-            width : The pen width
-
-        #### Returns:
-            None
-        '''
         self.ctx.lineWidth = width
 
     def clear_screen(self, color=Color.BLACK):
-
         self.ctx.clearRect(0, 0, self.canvas.width, self.canvas.height)
 
     def draw_rectangle(self, x, y, width, height, fill=False):
@@ -177,6 +129,27 @@ class Screen:
         else:
             self.ctx.stroke()
 
+# 重定向print输出
+class OutputRedirector:
+    def __init__(self, output_element):
+        self.output_element = output_element
+        self.buffer = ""
+        
+    def write(self, text):
+        self.buffer += text
+        if '\n' in text:
+            self.flush()
+    
+    def flush(self):
+        if self.buffer:
+            # 创建新的输出行
+            line = document.createElement("div")
+            line.className = "output-line"
+            line.textContent = self.buffer.rstrip()
+            self.output_element.appendChild(line)
+            # 自动滚动到底部
+            self.output_element.scrollTop = self.output_element.scrollHeight
+            self.buffer = ""
 
 # 将Brain类添加到全局作用域
 window.Brain = Brain
@@ -184,16 +157,20 @@ window.wait = wait
 window.vexEnum = vexEnum
 window.Color = Color
 
-
 # 执行代码的函数
-
-
-# 执行代码的函数（支持异步）
 def run_code(ev):
     try:
-        # 清空画布
+        # 清空画布和输出
         brain = Brain()
         brain.screen.clear_screen()
+        
+        # 清空输出区域
+        output_div = document["output"]
+        output_div.innerHTML = ""
+        
+        # 设置输出重定向
+        sys.stdout = OutputRedirector(output_div)
+        sys.stderr = OutputRedirector(output_div)
         
         # 获取代码
         code = document["codeInput"].value
@@ -203,7 +180,7 @@ def run_code(ev):
             "Brain": Brain,
             "wait": wait,
             "__name__": "__main__",
-            "brain": brain  # 提供预创建的实例
+            "brain": brain
         }
         
         # 执行用户代码
@@ -212,15 +189,16 @@ def run_code(ev):
         document["status"].text = "代码执行成功!"
     except Exception as e:
         document["status"].text = f"错误: {str(e)}"
-
-
-
+        # 将错误信息输出到控制台
+        sys.stderr.write(f"错误: {str(e)}\n")
+        sys.stderr.flush()
 
 def clear_canvas(ev):
+    # 清空画布和输出
     Brain().screen.clear_screen()
-    document["status"].text = "Canvas cleared"
+    document["output"].innerHTML = ""
+    document["status"].text = "已重置"
     document["status"].className = "status info"
-
 
 # 绑定事件
 document["runBtn"].bind("click", run_code)
