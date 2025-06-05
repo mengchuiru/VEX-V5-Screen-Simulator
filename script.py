@@ -1,7 +1,7 @@
 from browser import document, window, alert, timer, aio, console
 import javascript
 import sys
-
+import math
 
 class vexEnum:
     '''Base class for all enumerated types'''
@@ -17,23 +17,6 @@ class vexEnum:
 
     def __repr__(self):
         return self.name
-
-# 全局停止标志
-stop_requested = False
-
-# 使用异步编程实现真正的等待
-async def wait(ms):
-    """等待指定的毫秒数，这是一个异步操作"""
-    global stop_requested
-    start_time = javascript.Date.now()
-    while (javascript.Date.now() - start_time) < ms:
-        if stop_requested:
-            break
-        await aio.sleep(0.01)  # 检查间隔
-# # 使用异步编程实现真正的等待
-# async def wait(ms):
-#     """等待指定的毫秒数，这是一个异步操作"""
-#     await aio.sleep(ms / 1000)  # aio.sleep 接受秒为单位
 
 
 class Color:
@@ -235,10 +218,10 @@ class Screen:
         self.ctx.strokeRect(x, y, width, height)
         self.ctx.fillStyle = self.fill_color
 
-    def draw_circle(self, x, y, radius):
+    def draw_circle(self, x, y, radius,color=None):
         self.ctx.beginPath()
         self.ctx.arc(x, y, radius, 0, 2 * javascript.Math.PI)
-        self.ctx.fillStyle = self.fill_color
+        self.ctx.fillStyle = color if color else self.fill_color
         self.ctx.strokeStyle = self.pen_color
         self.ctx.fill()
         self.ctx.stroke()
@@ -262,51 +245,17 @@ class Screen:
         self.ctx.fillText(text, x, y)
 
     def x_position(self):
-        '''### The X coordinate of the last screen event, press or release
 
-        #### Arguments:
-            None
-
-        #### Returns:
-            The X coordinate as an int
-
-        #### Examples:
-            def foo():
-                print("screen pressed at ", brain.screen.x_position())
-
-            brain.screen.pressed(foo)
-        '''
         return self._last_x
 
     def y_position(self):
-        '''### The Y coordinate of the last screen event, press or release
-
-        #### Arguments:
-            None
-
-        #### Returns:
-            The Y coordinate as an int
-
-        #### Examples:
-            def foo():
-                print("screen pressed at ", brain.screen.y_position())
-
-            brain.screen.pressed(foo)
-        '''
         return self._last_y
 
     def pressing(self):
-        '''### Returns whether the screen is currently being pressed (touched)
-
-        #### Arguments:
-            None
-
-        #### Returns:
-            True or False
-        '''
-        '''This is a placeholder implementation. In a real application, this would check the actual touch state.'''
-
+        
         return self._pressing
+    def render(self):
+            return True
 
 
 # 重定向print输出
@@ -334,26 +283,23 @@ class OutputRedirector:
             self.buffer = ""
 
 
-# 将Brain类添加到全局作用域
-window.Brain = Brain
-window.wait = wait
-window.vexEnum = vexEnum
-window.Color = Color
-window.FontType = FontType
+# 在全局作用域中定义
+stop_flag = {'value': False}
 
 
+async def wait(ms):
+    """等待指定的毫秒数，这是一个异步操作"""
+    start_time = javascript.Date.now()
+    while (javascript.Date.now() - start_time) < ms:
+        if stop_flag['value']:
+            raise SystemExit("程序被用户中断")
+        await aio.sleep(0.01)  # 检查间隔
 
-# 检查停止标志的函数
-def check_stop():
-    global stop_requested
-    if stop_requested:
-        raise SystemExit("程序被用户中断")
 
 # 执行代码的函数
 def run_code(ev):
-    global stop_requested
-    stop_requested = False
-    
+    stop_flag['value'] = False  # 重置停止标志
+
     async def execute_code():
         try:
             # 清空画布和输出
@@ -370,7 +316,9 @@ def run_code(ev):
 
             # 获取代码
             code = document["codeInput"].value
-            # code.replace("wait(", "check_stop();await wait(") # 替换wait调用以检查停止标志
+            code = code.replace("from vex import *", "")
+            code = code.replace("wait(", "await wait(") # 替换wait调用以检查停止标志
+            code = code.replace("global", "nonlocal")
 
             # 准备全局变量
             exec_globals = {
@@ -382,21 +330,21 @@ def run_code(ev):
                 "__name__": "__main__",
                 "brain": brain,
                 "aio": aio,
-                "check_stop": check_stop,  # 提供检查停止的函数
-                "stop_requested": stop_requested  # 让用户代码可以访问停止标志
+                "stop_flag": stop_flag,
+                "__builtins__": __import__('builtins')
             }
 
             # 执行用户代码
             document["status"].text = "执行代码中..."
-            
+
             # 检查用户代码是否包含await
             has_await = 'await' in code
-            
+
             if has_await:
                 # 为包含await的代码创建异步包装器
                 wrapped_code = """
 async def __user_async_code():
-    global stop_requested
+    
     """ + "\n    ".join(code.splitlines()) + """
 
 aio.run(__user_async_code())
@@ -408,7 +356,7 @@ aio.run(__user_async_code())
                 # 普通代码直接执行
                 compiled_code = compile(code, "<string>", "exec")
                 exec(compiled_code, exec_globals)
-            
+
             document["status"].text = "代码执行成功!"
         except SystemExit as e:
             document["status"].text = "程序已停止"
@@ -417,27 +365,32 @@ aio.run(__user_async_code())
             # 将错误信息输出到控制台
             sys.stderr.write(f"错误: {str(e)}\n")
             sys.stderr.flush()
-    
+
     # 启动异步执行
     aio.run(execute_code())
 
 
 def clear_canvas(ev):
-    global stop_requested
-    stop_requested = True  # 设置停止标志
-    
+    stop_flag['value'] = True
+
     # 清空画布和输出
     try:
         brain = Brain()
         brain.screen.clear_screen()
     except:
         pass  # 忽略可能的错误
-    
+
     document["output"].innerHTML = ""
     document["status"].text = "已重置"
     document["status"].className = "status info"
 
 
+# 将Brain类添加到全局作用域
+window.Brain = Brain
+window.wait = wait
+window.vexEnum = vexEnum
+window.Color = Color
+window.FontType = FontType
 
 
 # 绑定事件
