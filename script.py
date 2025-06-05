@@ -43,10 +43,38 @@ class Color:
 
     def rgb(self, *args):
         '''Convert RGB values to a hex color string'''
+        if len(args) == 1:
+            col = args[0]
+            if isinstance(col, str) and col.startswith("#") and len(col) == 7:
+                return col
+            elif isinstance(col, int):
+                return f"#{col:06x}"
         if len(args) == 3:
             r, g, b = args
             return f"#{r:02x}{g:02x}{b:02x}"
-
+    def hsv(self, hue: float, saturation: float, value: float):
+        '''Convert HSV values to a hex color string'''
+        if 0 <= hue <= 360 and 0 <= saturation <= 1 and 0 <= value <= 1:
+            c = value * saturation
+            x = c * (1 - abs((hue / 60) % 2 - 1))
+            m = value - c
+            if hue < 60:
+                r, g, b = c, x, 0
+            elif hue < 120:
+                r, g, b = x, c, 0
+            elif hue < 180:
+                r, g, b = 0, c, x
+            elif hue < 240:
+                r, g, b = 0, x, c
+            elif hue < 300:
+                r, g, b = x, 0, c
+            else:
+                r, g, b = c, 0, x
+            return f"#{int((r + m) * 255):02x}{int((g + m) * 255):02x}{int((b + m) * 255):02x}"
+    def web(self, value: str):
+        '''Convert a web color string to a hex color string'''
+        if value.startswith("#") and len(value) == 7:
+            return value
 
 class FontType:
     '''A unit representing font type and size'''
