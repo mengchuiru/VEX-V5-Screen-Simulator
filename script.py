@@ -315,7 +315,9 @@ def run_code(ev):
             sys.stderr = OutputRedirector(output_div)
 
             # 获取代码
-            code = document["codeInput"].value
+            # 修改后的代码获取方式
+            code = document["codeInput"].textContent
+            # code = document["codeInput"].value
             code = code.replace("from vex import *", "")
             code = code.replace("wait(", "await wait(") # 替换wait调用以检查停止标志
             code = code.replace("global", "nonlocal")
@@ -371,7 +373,7 @@ aio.run(__user_async_code())
 
 
 def clear_canvas(ev):
-    stop_flag['value'] = True
+    
 
     # 清空画布和输出
     try:
@@ -383,6 +385,7 @@ def clear_canvas(ev):
     document["output"].innerHTML = ""
     document["status"].text = "已重置"
     document["status"].className = "status info"
+    stop_flag['value'] = True
 
 
 # 将Brain类添加到全局作用域

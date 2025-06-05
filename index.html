@@ -42,7 +42,10 @@
                         <button id="resetBtn" class="btn reset-btn" type="button">重置</button>
                     </div>
                 </div>
-                <textarea id="codeInput" placeholder="粘贴 Python 代码到这里...">
+
+                <!-- 修改后的部分 -->
+                <div id="codeEditor" class="code-container" contenteditable="true" spellcheck="false">
+                    <pre><code class="language-python" id="codeInput"># VEX-V5 Screen Simulator Example --- 3D Wireframe Cube Animation
 # Library imports
 from vex import *
 import math
@@ -148,13 +151,62 @@ while True:
     wait(20)  # 等待20ms
 
 
-
-</textarea></textarea>
+</code></pre>
+                </div>
             </div>
         </main>
     </div>
 
     <script type="text/python" src="script.py"></script>
+    <script>
+        // 简单的语法高亮函数
+        function highlightCode() {
+            const codeElement = document.getElementById('codeInput');
+            let code = codeElement.textContent;
+
+            // 转义HTML特殊字符
+            code = code.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+            // 应用语法高亮规则
+
+            // 1. 字符串（单引号或双引号）
+            code = code.replace(/("(?:[^"\\]|\\.)*?"|'(?:[^'\\]|\\.)*?')/g, '<span class="token string">$1</span>');
+
+            // 2. 注释（以 # 开头）
+            code = code.replace(/(#.*$)/gm, '<span class="token comment">$1</span>');
+
+            // 3. 类名（class 后的标识符）
+            code = code.replace(/(\bclass\s+)(\w+)/g, '$1<span class="token class-name">$2</span>');
+
+            // 4. 函数名（def 或 async def 后的标识符）
+            code = code.replace(/(\basync\s+def\s+)(\w+)/g, '$1<span class="token function">$2</span>');
+            code = code.replace(/(\bdef\s+)(\w+)/g, '$1<span class="token function">$2</span>');
+
+            // 5. 关键字（排除 def/class，因为它们已被处理）
+            const keywords = [
+                'False', 'None', 'True', 'and', 'as', 'assert', 'await', 'break',
+                'continue', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from',
+                'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not',
+                'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield'
+            ];
+            const keywordPattern = new RegExp(`\\b(${keywords.join('|')})\\b`, 'g');
+            code = code.replace(keywordPattern, '<span class="token keyword">$1</span>');
+
+            // 6. 数字（整数或浮点数）
+            code = code.replace(/\b(\d+\.?\d*|\.\d+)\b/g, '<span class="token number">$1</span>');
+
+
+            codeElement.innerHTML = code;
+        }
+
+        // 页面加载完成后执行高亮
+        document.addEventListener('DOMContentLoaded', highlightCode);
+    </script>
+
 
 </body>
 

@@ -120,7 +120,7 @@ main {
     font-weight: 500;
 }
 
-#codeInput {
+/* #codeInput {
     flex: 1;
     padding: 1.2rem;
     background: var(--editor-bg);
@@ -131,6 +131,19 @@ main {
     font-size: 15px;
     line-height: 1.5;
     tab-size: 4;
+} */
+
+/* 移除textarea的样式 */
+#codeInput {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    white-space: pre;
 }
 
 #codeInput:focus {
@@ -219,4 +232,53 @@ footer {
 
 .output-console::-webkit-scrollbar-thumb:hover {
     background: #2d3748;
+}
+
+
+
+/* 添加代码高亮样式 */
+.code-container {
+    position: relative;
+    height: 100%;
+    overflow: auto;
+    padding: 1.2rem;
+    background: var(--editor-bg);
+    color: var(--text-color);
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 15px;
+    line-height: 1.5;
+    tab-size: 4;
+}
+
+.code-container:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 2px #4dabf7;
+}
+
+.token.comment {
+    color: #6A9955;
+}
+
+.token.keyword {
+    color: #b056d6;
+}
+
+.token.function {
+    color: #d4d429;
+}
+
+.token.string {
+    color: #CE9178;
+}
+
+.token.number {
+    color: #7a7ab6;
+}
+
+.token.class-name {
+    color: #4EC9B0;
+}
+
+.token.operator {
+    color: #D4D4D4;
 }
