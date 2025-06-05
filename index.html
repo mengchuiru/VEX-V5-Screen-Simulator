@@ -43,9 +43,7 @@
                     </div>
                 </div>
 
-                <!-- 修改后的部分 -->
-                <div id="codeEditor" class="code-container" contenteditable="true" spellcheck="false">
-                    <pre><code class="language-python" id="codeInput"># VEX-V5 Screen Simulator Example --- 3D Wireframe Cube Animation
+                <textarea id="codeInput" class="code-container"># VEX-V5 Screen Simulator Example --- 3D Wireframe Cube Animation
 # Library imports
 from vex import *
 import math
@@ -150,15 +148,14 @@ while True:
     brain.screen.render()
     wait(20)  # 等待20ms
 
+                        </textarea>
 
-</code></pre>
-                </div>
             </div>
         </main>
     </div>
 
     <script type="text/python" src="script.py"></script>
-    <script>
+    <!-- <script>
         // 简单的语法高亮函数
         function highlightCode() {
             const codeElement = document.getElementById('codeInput');
@@ -205,7 +202,7 @@ while True:
 
         // 页面加载完成后执行高亮
         document.addEventListener('DOMContentLoaded', highlightCode);
-    </script>
+    </script> -->
 
 
 </body>

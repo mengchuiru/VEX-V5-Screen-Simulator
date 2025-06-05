@@ -120,7 +120,7 @@ main {
     font-weight: 500;
 }
 
-/* #codeInput {
+#codeInput {
     flex: 1;
     padding: 1.2rem;
     background: var(--editor-bg);
@@ -131,10 +131,10 @@ main {
     font-size: 15px;
     line-height: 1.5;
     tab-size: 4;
-} */
+}
 
 /* 移除textarea的样式 */
-#codeInput {
+/* #codeInput {
     background: none;
     border: none;
     padding: 0;
@@ -144,7 +144,7 @@ main {
     font-size: inherit;
     line-height: inherit;
     white-space: pre;
-}
+} */
 
 #codeInput:focus {
     outline: none;

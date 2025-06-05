@@ -77,185 +77,195 @@ class FontType:
 
 
 class Brain:
+
     def __init__(self):
-        self.screen = Screen()
+        self.screen = Brain.Lcd()
+        self.timer = Brain.Timer()
 
+    class Timer:
+        def __init__(self):
+            self.start_time = javascript.Date.now()
+        def reset(self):
+            self.start_time = javascript.Date.now()
+        def time(self):
+            return javascript.Date.now() - self.start_time
 
-class Screen:
-    def __init__(self):
-        self._row = 1
-        self._col = 1
-        self._originx = 0
-        self._originy = 0
-        self.pen_color = Color.WHITE
-        self.fill_color = Color.BLACK
-        self.font_size = 20
-        # 添加触摸状态和位置跟踪
-        self._last_x = 0
-        self._last_y = 0
-        self._pressing = False
+    class Lcd:
+        def __init__(self):
+            self._row = 1
+            self._col = 1
+            self._originx = 0
+            self._originy = 0
+            self.pen_color = Color.WHITE
+            self.fill_color = Color.BLACK
+            self.font_size = 20
+            # 添加触摸状态和位置跟踪
+            self._last_x = 0
+            self._last_y = 0
+            self._pressing = False
 
-        self.canvas = document["screenCanvas"]
-        self.ctx = self.canvas.getContext("2d")
-        self.ctx.lineWidth = 1
-        self.ctx.strokeStyle = self.pen_color
-        self.ctx.fillStyle = self.fill_color
-        self.ctx.font = FontType.MONO20
-        self.ctx.textAlign = "left"
-        self.ctx.textBaseline = "bottom"
-        # 绑定触摸事件
-        self.canvas.bind("mousedown", self.handle_touch_start)
-        self.canvas.bind("touchstart", self.handle_touch_start)
-        self.canvas.bind("mouseup", self.handle_touch_end)
-        self.canvas.bind("touchend", self.handle_touch_end)
-        self.canvas.bind("mousemove", self.handle_touch_move)
-        self.canvas.bind("touchmove", self.handle_touch_move)
-        document.bind("mouseup", self.handle_global_end)  # 处理在画布外释放
+            self.canvas = document["screenCanvas"]
+            self.ctx = self.canvas.getContext("2d")
+            self.ctx.lineWidth = 1
+            self.ctx.strokeStyle = self.pen_color
+            self.ctx.fillStyle = self.fill_color
+            self.ctx.font = FontType.MONO20
+            self.ctx.textAlign = "left"
+            self.ctx.textBaseline = "bottom"
+            # 绑定触摸事件
+            self.canvas.bind("mousedown", self.handle_touch_start)
+            self.canvas.bind("touchstart", self.handle_touch_start)
+            self.canvas.bind("mouseup", self.handle_touch_end)
+            self.canvas.bind("touchend", self.handle_touch_end)
+            self.canvas.bind("mousemove", self.handle_touch_move)
+            self.canvas.bind("touchmove", self.handle_touch_move)
+            document.bind("mouseup", self.handle_global_end)  # 处理在画布外释放
 
-   # 新增事件处理方法
-    def handle_touch_start(self, event):
-        event.stopPropagation()
-        event.preventDefault()
-        self._pressing = True
-        self.update_touch_position(event)
-
-    def handle_touch_end(self, event):
-        event.stopPropagation()
-        event.preventDefault()
-        self._pressing = False
-
-    def handle_touch_move(self, event):
-        if self._pressing:
+    # 新增事件处理方法
+        def handle_touch_start(self, event):
             event.stopPropagation()
             event.preventDefault()
+            self._pressing = True
             self.update_touch_position(event)
 
-    def handle_global_end(self, event):
-        self._pressing = False
+        def handle_touch_end(self, event):
+            event.stopPropagation()
+            event.preventDefault()
+            self._pressing = False
 
-    def update_touch_position(self, event):
-        # 获取触摸/鼠标位置
-        if hasattr(event, 'touches') and len(event.touches) > 0:
-            touch = event.touches[0]
-            clientX = touch.clientX
-            clientY = touch.clientY
-        else:
-            clientX = event.clientX
-            clientY = event.clientY
+        def handle_touch_move(self, event):
+            if self._pressing:
+                event.stopPropagation()
+                event.preventDefault()
+                self.update_touch_position(event)
 
-        # 计算画布相对位置
-        rect = self.canvas.getBoundingClientRect()
-        scale_x = self.canvas.width / rect.width
-        scale_y = self.canvas.height / rect.height
+        def handle_global_end(self, event):
+            self._pressing = False
 
-        self._last_x = int((clientX - rect.left) * scale_x)
-        self._last_y = int((clientY - rect.top) * scale_y)
+        def update_touch_position(self, event):
+            # 获取触摸/鼠标位置
+            if hasattr(event, 'touches') and len(event.touches) > 0:
+                touch = event.touches[0]
+                clientX = touch.clientX
+                clientY = touch.clientY
+            else:
+                clientX = event.clientX
+                clientY = event.clientY
 
-    def set_cursor(self, row: int, col: int):
-        self._row = row
-        self._col = col
+            # 计算画布相对位置
+            rect = self.canvas.getBoundingClientRect()
+            scale_x = self.canvas.width / rect.width
+            scale_y = self.canvas.height / rect.height
 
-    def column(self):
-        return self._col
+            self._last_x = int((clientX - rect.left) * scale_x)
+            self._last_y = int((clientY - rect.top) * scale_y)
 
-    def row(self):
-        return self._row
+        def set_cursor(self, row: int, col: int):
+            self._row = row
+            self._col = col
 
-    def set_origin(self, x: int, y: int):
-        self._originx = x
-        self._originy = y
+        def column(self):
+            return self._col
 
-    def set_font(self, fontname: FontType):
-        self.font_size = int(str(fontname)[0:2])
-        self.ctx.font = fontname
+        def row(self):
+            return self._row
 
-    def set_pen_width(self, width: int):
-        self.ctx.lineWidth = width
+        def set_origin(self, x: int, y: int):
+            self._originx = x
+            self._originy = y
 
-    def set_fill_color(self, color: Color):
-        '''Set the fill color for shapes'''
-        self.fill_color = color
-        self.ctx.fillStyle = color
+        def set_font(self, fontname: FontType):
+            self.font_size = int(str(fontname)[0:2])
+            self.ctx.font = fontname
 
-    def set_pen_color(self, color):
-        '''Set the pen color for drawing'''
-        self.pen_color = color
-        self.ctx.strokeStyle = color
+        def set_pen_width(self, width: int):
+            self.ctx.lineWidth = width
 
-    def clear_screen(self, color=Color.BLACK):
-        self.ctx.clearRect(0, 0, self.canvas.width, self.canvas.height)
+        def set_fill_color(self, color: Color):
+            '''Set the fill color for shapes'''
+            self.fill_color = color
+            self.ctx.fillStyle = color
 
-    def clear_line(self, number=None, color=Color.BLACK):
-        pass
+        def set_pen_color(self, color):
+            '''Set the pen color for drawing'''
+            self.pen_color = color
+            self.ctx.strokeStyle = color
 
-    def clear_row(self, number=None, color=Color.BLACK):
-        pass
+        def clear_screen(self, color=Color.BLACK):
+            self.ctx.clearRect(0, 0, self.canvas.width, self.canvas.height)
 
-    def new_line(self):
-        pass
+        def clear_line(self, number=None, color=Color.BLACK):
+            pass
 
-    def next_row(self):
-        pass
+        def clear_row(self, number=None, color=Color.BLACK):
+            pass
 
-    def draw_pixel(self, x, y):
-        '''Draw a pixel at the specified coordinates'''
-        self.ctx.fillStyle = self.pen_color
-        self.ctx.fillRect(x, y, 1, 1)
+        def new_line(self):
+            pass
 
-    def draw_line(self, x1, y1, x2, y2):
-        '''Draw a line from (x1, y1) to (x2, y2)'''
-        self.ctx.strokeStyle = self.pen_color
-        self.ctx.beginPath()
-        self.ctx.moveTo(x1, y1)
-        self.ctx.lineTo(x2, y2)
-        self.ctx.stroke()
+        def next_row(self):
+            pass
 
-    def draw_rectangle(self, x, y, width, height, color=None):
-        '''Draw a rectangle at (x, y) with specified width and height'''
-        self.ctx.strokeStyle = self.pen_color
-        self.ctx.fillStyle = color if color else self.fill_color
-        self.ctx.fillRect(x, y, width, height)
-        self.ctx.strokeRect(x, y, width, height)
-        self.ctx.fillStyle = self.fill_color
+        def draw_pixel(self, x, y):
+            '''Draw a pixel at the specified coordinates'''
+            self.ctx.fillStyle = self.pen_color
+            self.ctx.fillRect(x, y, 1, 1)
 
-    def draw_circle(self, x, y, radius,color=None):
-        self.ctx.beginPath()
-        self.ctx.arc(x, y, radius, 0, 2 * javascript.Math.PI)
-        self.ctx.fillStyle = color if color else self.fill_color
-        self.ctx.strokeStyle = self.pen_color
-        self.ctx.fill()
-        self.ctx.stroke()
+        def draw_line(self, x1, y1, x2, y2):
+            '''Draw a line from (x1, y1) to (x2, y2)'''
+            self.ctx.strokeStyle = self.pen_color
+            self.ctx.beginPath()
+            self.ctx.moveTo(x1, y1)
+            self.ctx.lineTo(x2, y2)
+            self.ctx.stroke()
 
-    def get_string_width(self, *args):
-        return 0
+        def draw_rectangle(self, x, y, width, height, color=None):
+            '''Draw a rectangle at (x, y) with specified width and height'''
+            self.ctx.strokeStyle = self.pen_color
+            self.ctx.fillStyle = color if color else self.fill_color
+            self.ctx.fillRect(x, y, width, height)
+            self.ctx.strokeRect(x, y, width, height)
+            self.ctx.fillStyle = self.fill_color
 
-    def get_string_height(self, *args):
-        return 0
+        def draw_circle(self, x, y, radius,color=None):
+            self.ctx.beginPath()
+            self.ctx.arc(x, y, radius, 0, 2 * javascript.Math.PI)
+            self.ctx.fillStyle = color if color else self.fill_color
+            self.ctx.strokeStyle = self.pen_color
+            self.ctx.fill()
+            self.ctx.stroke()
 
-    def print(self, *args, **kwargs):
-        text = " ".join(str(arg) for arg in args)
-        x = self._originx + (self._col-1) * self.font_size//2
-        y = self._originy + self._row * self.font_size
-        self._col += len(text)
+        def get_string_width(self, *args):
+            return 0
 
-        self.print_at(x, y, text)
+        def get_string_height(self, *args):
+            return 0
 
-    def print_at(self, x, y, text):
-        self.ctx.fillStyle = self.pen_color
-        self.ctx.fillText(text, x, y)
+        def print(self, *args, **kwargs):
+            text = " ".join(str(arg) for arg in args)
+            x = self._originx + (self._col-1) * self.font_size//2
+            y = self._originy + self._row * self.font_size
+            self._col += len(text)
 
-    def x_position(self):
+            self.print_at(x, y, text)
 
-        return self._last_x
+        def print_at(self, x, y, text):
+            self.ctx.fillStyle = self.pen_color
+            self.ctx.fillText(text, x, y)
 
-    def y_position(self):
-        return self._last_y
+        def x_position(self):
 
-    def pressing(self):
-        
-        return self._pressing
-    def render(self):
-            return True
+            return self._last_x
+
+        def y_position(self):
+            return self._last_y
+
+        def pressing(self):
+            
+            return self._pressing
+        def render(self):
+                return True
+
 
 
 # 重定向print输出
@@ -315,9 +325,8 @@ def run_code(ev):
             sys.stderr = OutputRedirector(output_div)
 
             # 获取代码
-            # 修改后的代码获取方式
-            code = document["codeInput"].textContent
-            # code = document["codeInput"].value
+            # code = document["codeInput"].textContent
+            code = document["codeInput"].value
             code = code.replace("from vex import *", "")
             code = code.replace("wait(", "await wait(") # 替换wait调用以检查停止标志
             code = code.replace("global", "nonlocal")
