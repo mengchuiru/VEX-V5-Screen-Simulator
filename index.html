@@ -25,7 +25,7 @@
                     <span>分辨率: 480x240 像素</span>
                 </div>
                 <div class="brain-container">
-                    <canvas id="screenCanvas"></canvas>
+                    <canvas id="screenCanvas" width="480" height="240"></canvas>
                 </div>
                 <footer>
                     <div id="output" class="output-console"></div>
@@ -42,21 +42,29 @@
                         <button id="resetBtn" class="btn reset-btn" type="button">重置</button>
                     </div>
                 </div>
-                <textarea id="codeInput" placeholder="粘贴 Python 代码到这里..."># Create brain instance
-brain = Brain()
-# Draw a rectangle
-brain.screen.draw_rectangle(10, 10, 50, 50)
-# Draw a circle
-brain.screen.draw_circle(120, 60, 30)
-# Draw a line
-brain.screen.draw_line(180, 20, 280, 100)
-# Draw text
-brain.screen.draw_text(50, 150, "Hello, Brython!")
+                <textarea id="codeInput" placeholder="粘贴 Python 代码到这里...">brain = Brain()
+screen = brain.screen
 
-# Print example
-print("程序开始运行...")
-for i in range(3):
-    print(f"计数: {i+1}")</textarea>
+while True:
+    # 检查是否请求停止
+    check_stop()
+    
+    # 循环内容
+    screen.clear_screen()
+    screen.set_fill_color(Color.RED)
+    screen.draw_circle(100, 100, 50)
+    
+    # 等待一段时间
+    await wait(100)
+    
+    # 再次检查
+    check_stop()
+    
+    screen.clear_screen()
+    screen.set_fill_color(Color.GREEN)
+    screen.draw_circle(200, 100, 50)
+    
+    await wait(100)</textarea>
             </div>
         </main>
     </div>

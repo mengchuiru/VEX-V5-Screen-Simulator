@@ -75,7 +75,7 @@ main {
 
 .simulator-header {
     background: linear-gradient(135deg, #3a506b, #1c2541);
-    padding: 0.8rem 1.2rem;
+    padding: 0.4rem 1.2rem;
     display: flex;
     justify-content: space-between;
     font-size: 0.95rem;
@@ -84,22 +84,20 @@ main {
 
 .brain-container {
     position: relative;
-    top: 0;
-    left: 0;
     width: 710px;
     height: 510px;
     background: url('./assets/brain.png') center/cover;
 }
 
 #screenCanvas {
-    position: relative;
-    left: 84px;
-    top: 156px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-56.3%, -41%);
     width: 480px;
     height: 240px;
-    background: #000000;
-    border: 1px solid #444;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    background: #000;
+    border: 0px solid #444;
 }
 
 .code-editor {
@@ -177,7 +175,8 @@ footer {
     padding: 0;
     background: linear-gradient(135deg, #3a506b, #1c2541);
     border-top: 1px solid #444;
-    height: 100px; /* 固定输出区域高度 */
+    height: 100px;
+    /* 固定输出区域高度 */
     display: flex;
 }
 
@@ -195,7 +194,7 @@ footer {
 
 .output-line {
     padding: 4px 0;
-    line-height: 1.4;
+    line-height: 1.1;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
