@@ -98,7 +98,7 @@ class FontType:
     '''proportional font of size 15'''
     MONO12 = "12px prop, sans-serif"
     '''proportional font of size 12'''
-    CJK16 = "16px prop, sans-serif"
+    CJK16 = "16px cjk, sans-serif"
     '''Chinese/Japanese/Korean font of size 16'''
 
 # 创建模拟的Brain和Screen类
@@ -275,9 +275,9 @@ class Brain:
             y = self._originy + self._row * self.font_size
             self._col += len(text)
 
-            self.print_at(x, y, text)
+            self.print_at(text, x, y)
 
-        def print_at(self, x, y, text):
+        def print_at(self,text, x, y):
             self.ctx.fillStyle = self.pen_color
             self.ctx.fillText(text, x, y)
 
