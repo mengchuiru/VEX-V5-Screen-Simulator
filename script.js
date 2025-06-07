@@ -14,8 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 示例URL映射
     const EXAMPLE_URLS = {
         Rotating_Cube: 'examples/rotating_cube.py',
-        Brick_Beaking: 'https://raw.githubusercontent.com/mengchuiru/VEX_program/main/Brick_Beaking/src/main.py',
-        Code_Rain: 'https://gitee.com/mengchuiru/VEX_program/raw/main/Code_Rain/src/main.py',
+        Brick_Beaking: 'examples/brick_breaking.py',
+        Maze_Solver: 'examples/maze_solver.py',
+        Code_Rain: 'examples/code_rain.py',
     };
 
     // 初始化编辑器
