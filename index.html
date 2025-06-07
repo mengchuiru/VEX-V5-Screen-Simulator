@@ -3,14 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VEX-V5 Screen Simulator</title>
-    <link rel="stylesheet" href="style.css?v=1.5">
-    <link rel="icon" href="assets/favicon.svg" type="image/x-icon">
+    <!-- icon -->
     <link rel="icon" href="https://content.vexrobotics.com/vexheader/v5Red.svg" type="image/x-icon">
 
+    <!-- 合并样式加载 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/dracula.min.css">
+    <link rel="stylesheet" href="style.css?v=2.4">
+
+    <!-- 合并脚本加载 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.0/brython.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/brython/3.11.0/brython_stdlib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/python/python.min.js"></script>
 </head>
 
 <body onload="brython()">
@@ -18,195 +24,38 @@
         <header>
             <h1>VEX-V5 Screen Simulator</h1>
         </header>
-
         <main>
             <!-- 屏幕模拟区域 -->
             <div class="screen-simulator">
-                <div class="simulator-header">
-                    <span>VEX V5 屏幕模拟 </span>
-                    <span>分辨率: 480x240 像素</span>
-                </div>
-                <div class="brain-container">
-                    <canvas id="screenCanvas" width="480" height="240"></canvas>
-                </div>
-                <footer>
-                    <div id="output" class="output-console"></div>
-                </footer>
+                <div class="simulator-header"><span>VEX V5 Screen Simulator</span><span>480 x 240 pixels</span></div>
+                <div class="brain-container"><canvas id="screenCanvas" width="480" height="240"></canvas></div>
+                <div id="output" class="output-console"></div>
             </div>
-
             <!-- 代码编辑器区域 -->
             <div class="code-editor">
                 <div class="editor-header">
-                    <span>Python代码</span>
-                    <span id="status">状态：就绪</span>
+                    <span>🐍Python</span>
+                    <select id="exampleSelector" class="example-selector">
+                        <option value="upLoad">📁 UpLoad </option>
+                        <option value="Rotating_Cube" selected>📄Rotating_Cube</option>
+                        <option value="Brick_Beaking">📄Brick_Beaking</option>
+                        <option value="Code_Rain">📄Code_Rain</option>
+                        
+                    </select>
+                    <span id="status">Ready</span>
                     <div class="editor-buttons">
-                        <button id="runBtn" class="btn run-btn" type="button">运行</button>
-                        <button id="resetBtn" class="btn reset-btn" type="button">重置</button>
+                        <button id="runBtn" class="btn run-btn">▶</button>
+                        <button id="resetBtn" class="btn reset-btn">⏹</button>
                     </div>
                 </div>
-
-                <textarea id="codeInput" class="code-container"># VEX-V5 Screen Simulator Example --- 3D Wireframe Cube Animation
-# Library imports
-from vex import *
-import math
-
-# Brain should be defined by default
-brain = Brain()
-
-
-class Cube:
-    def __init__(self, x0, y0, scale, angle_x=0, angle_y=0):
-        # 定义立方体的顶点坐标
-        self.vertices = [
-            (-1, -1, -1),
-            (1, -1, -1),
-            (1, 1, -1),
-            (-1, 1, -1),
-            (-1, -1, 1),
-            (1, -1, 1),
-            (1, 1, 1),
-            (-1, 1, 1),
-        ]
-        # 定义立方体的边
-        self.edges = [
-            (0, 1),
-            (1, 2),
-            (2, 3),
-            (3, 0),  # 底面
-            (4, 5),
-            (5, 6),
-            (6, 7),
-            (7, 4),  # 顶面
-            (0, 4),
-            (1, 5),
-            (2, 6),
-            (3, 7),  # 侧边
-        ]
-        # 定义立方体的中心坐标和缩放比例
-        self.x0 = x0
-        self.y0 = y0
-        self.scale = scale
-        # 定义旋转角度和旋转速度
-        self.angle_x = angle_x
-        self.angle_y = angle_y
-        self.angle_x_speed = 0.02
-        self.angle_y_speed = 0.03
-
-    def project_3d_to_2d(self, x, y, z):
-        """3D坐标投影到2D平面"""
-
-        # 应用旋转矩阵
-        rotated_y = y * math.cos(self.angle_x) - z * math.sin(self.angle_x)
-        rotated_z = y * math.sin(self.angle_x) + z * math.cos(self.angle_x)
-        rotated_x = x * math.cos(self.angle_y) + rotated_z * math.sin(self.angle_y)
-        rotated_z = -x * math.sin(self.angle_y) + rotated_z * math.cos(self.angle_y)
-
-        # 正交投影到2D平面
-        return rotated_x * self.scale, rotated_y * self.scale
-
-    def draw_cube(self):
-        """绘制立方体线框"""
-
-        # 更新旋转角度
-        self.angle_x += self.angle_x_speed
-        self.angle_y += self.angle_y_speed
-        # 清屏
-        brain.screen.set_pen_color(Color.BLACK)
-        brain.screen.draw_circle(
-            self.x0, self.y0, self.scale * math.sqrt(3.3), Color.BLACK
-        )
-        # 绘制立方体的每条边
-        for edge in self.edges:
-            start = self.vertices[edge[0]]
-            end = self.vertices[edge[1]]
-            # 转换起点坐标
-            x1, y1, z1 = start
-            proj_x1, proj_y1 = self.project_3d_to_2d(x1, y1, z1)
-
-            # 转换终点坐标
-            x2, y2, z2 = end
-            proj_x2, proj_y2 = self.project_3d_to_2d(x2, y2, z2)
-
-            # 绘制线段
-            brain.screen.set_pen_color(Color.WHITE)
-            brain.screen.draw_line(
-                self.x0 + proj_x1,
-                self.y0 + proj_y1,
-                self.x0 + proj_x2,
-                self.y0 + proj_y2,
-            )
-
-
-# 动画循环
-
-# 创建两个立方体对象
-cube1 = Cube(120, 120, 60, 90, 90)
-cube2 = Cube(360, 120, 40)
-while True:
-
-    # 绘制并更新画面
-    cube1.draw_cube()
-    cube2.draw_cube()
-    brain.screen.render()
-    wait(20)  # 等待20ms
-
-                        </textarea>
-
+                <div class="editor-body">
+                    <textarea id="codeEditor"></textarea>
+                </div>
             </div>
         </main>
     </div>
-
-    <script type="text/python" src="script.py"></script>
-    <!-- <script>
-        // 简单的语法高亮函数
-        function highlightCode() {
-            const codeElement = document.getElementById('codeInput');
-            let code = codeElement.textContent;
-
-            // 转义HTML特殊字符
-            code = code.replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-
-            // 应用语法高亮规则
-
-            // 1. 字符串（单引号或双引号）
-            code = code.replace(/("(?:[^"\\]|\\.)*?"|'(?:[^'\\]|\\.)*?')/g, '<span class="token string">$1</span>');
-
-            // 2. 注释（以 # 开头）
-            code = code.replace(/(#.*$)/gm, '<span class="token comment">$1</span>');
-
-            // 3. 类名（class 后的标识符）
-            code = code.replace(/(\bclass\s+)(\w+)/g, '$1<span class="token class-name">$2</span>');
-
-            // 4. 函数名（def 或 async def 后的标识符）
-            code = code.replace(/(\basync\s+def\s+)(\w+)/g, '$1<span class="token function">$2</span>');
-            code = code.replace(/(\bdef\s+)(\w+)/g, '$1<span class="token function">$2</span>');
-
-            // 5. 关键字（排除 def/class，因为它们已被处理）
-            const keywords = [
-                'False', 'None', 'True', 'and', 'as', 'assert', 'await', 'break',
-                'continue', 'del', 'elif', 'else', 'except', 'finally', 'for', 'from',
-                'global', 'if', 'import', 'in', 'is', 'lambda', 'nonlocal', 'not',
-                'or', 'pass', 'raise', 'return', 'try', 'while', 'with', 'yield'
-            ];
-            const keywordPattern = new RegExp(`\\b(${keywords.join('|')})\\b`, 'g');
-            code = code.replace(keywordPattern, '<span class="token keyword">$1</span>');
-
-            // 6. 数字（整数或浮点数）
-            code = code.replace(/\b(\d+\.?\d*|\.\d+)\b/g, '<span class="token number">$1</span>');
-
-
-            codeElement.innerHTML = code;
-        }
-
-        // 页面加载完成后执行高亮
-        document.addEventListener('DOMContentLoaded', highlightCode);
-    </script> -->
-
-
+    <script type="text/python" src="vex_api.py"></script>
+    <script src="script.js?v=1.9"></script>
 </body>
 
 </html>
