@@ -28,7 +28,12 @@
             <!-- 屏幕模拟区域 -->
             <div class="screen-simulator">
                 <div class="simulator-header"><span>VEX V5 Screen Simulator</span><span>480 x 240 pixels</span></div>
-                <div class="brain-container"><canvas id="screenCanvas" width="480" height="240"></canvas></div>
+                <div class="brain-container">
+                    <div id="run-time-container">
+                        <span id="run-time">00:00</span>
+                    </div>
+                    <canvas id="screenCanvas" width="480" height="240"></canvas>
+                </div>
                 <div id="output" class="output-console"></div>
             </div>
             <!-- 代码编辑器区域 -->
@@ -40,7 +45,7 @@
                         <option value="Rotating_Cube" selected>📄Rotating_Cube</option>
                         <option value="Brick_Beaking">📄Brick_Beaking</option>
                         <option value="Code_Rain">📄Code_Rain</option>
-                        
+
                     </select>
                     <span id="status">Ready</span>
                     <div class="editor-buttons">

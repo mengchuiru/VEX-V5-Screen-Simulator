@@ -117,6 +117,27 @@ main {
     flex-shrink: 0;
 }
 
+
+#run-time-container {
+    position: absolute;
+    top: 25%;
+    left: 45%;
+    transform: translateX(-50%);
+    z-index: 10;
+    /* 确保在画布上方 */
+    display: none; 
+}
+
+#run-time {
+    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    pointer-events: none; 
+    font-family: 'Consolas', monospace;
+    font-size: 22px;
+    text-align: center;
+
+}
+
 /* 画布位置和比例 - 关键优化 */
 #screenCanvas {
     position: absolute;

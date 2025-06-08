@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 获取DOM元素
     const statusElement = document.getElementById('status');
     const selectorElement = document.getElementById('exampleSelector');
+    const runTimeElement = document.getElementById('run-time');
+    const runTimeContainer = document.getElementById('run-time-container');
 
     // 创建文件输入元素
     const fileInput = document.createElement('input');
@@ -35,6 +37,38 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.accept = '.py,.txt';
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
+
+    // 计时器变量
+    let startTime = 0;
+    let timerInterval = null;
+    
+    // 更新运行时间显示
+    function updateRunTime() {
+        const elapsed = Date.now() - startTime;
+        const minutes = Math.floor(elapsed / 60000%60);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        runTimeElement.textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // 开始计时
+    function startTimer() {
+        stopTimer(); // 确保之前的计时器被清除
+        runTimeElement.textContent = '00:00';
+    
+        runTimeContainer.style.display = 'block';
+        startTime = Date.now();
+        timerInterval = setInterval(updateRunTime, 1000);
+    }
+    
+    // 停止计时
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        runTimeContainer.style.display = 'none';
+    }
 
     // 异步加载代码函数
     async function loadCode(url) {
@@ -110,6 +144,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 运行按钮点击事件 - 开始计时
+    document.getElementById('runBtn').addEventListener('click', () => {
+        startTimer();
+    });
+    // 停止按钮点击事件 - 停止计时
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        stopTimer();
+    });
     // 初始加载默认示例
     selectorElement.dispatchEvent(new Event('change'));
 });

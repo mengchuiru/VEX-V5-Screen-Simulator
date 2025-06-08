@@ -380,6 +380,10 @@ def run_code(ev):
     '''运行用户代码'''
     # 停止之前的执行
     stop_flag['value'] = True
+        # 在JavaScript中重置计时器
+    # window.resetTimer = window.resetTimer or None
+    # if window.resetTimer:
+    #     window.resetTimer()
 
 
     async def execute_code():
