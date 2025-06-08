@@ -62,14 +62,17 @@ def pabble_position():
     """ 更新球拍位置 """
     global pabble_x
     if brain.screen.pressing():
-        if brain.screen.x_position() < WIDTH//2:
-            pabble_x -= 5
-        if brain.screen.x_position() > WIDTH//2:
-            pabble_x += 5
-        if pabble_x < 0:
-            pabble_x = 0
-        if pabble_x > WIDTH - PABBLE_WIDTH:
-            pabble_x = WIDTH - PABBLE_WIDTH
+        touch_x = brain.screen.x_position()
+        
+        # 平滑移动球拍 (跟随触摸点)
+        target_x = touch_x - PABBLE_WIDTH // 2
+        if target_x < 0:
+            target_x = 0
+        elif target_x > WIDTH - PABBLE_WIDTH:
+            target_x = WIDTH - PABBLE_WIDTH
+            
+        # 插值移动，更平滑
+        pabble_x += min(5,max((target_x - pabble_x) * 0.2,-5))
 
 
 def collision_rect(rect_x, rect_y, rect_width, rect_height):
