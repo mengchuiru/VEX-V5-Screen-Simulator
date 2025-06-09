@@ -131,6 +131,49 @@ class Brain:
         def time(self):
             return javascript.Date.now() - self.start_time
 
+    class Battery:
+
+        def __init__(self):
+            pass
+
+        def capacity(self):
+            return 100
+
+        def temperature(self, units):
+            return 20
+
+        def voltage(self, units):
+            return 12800
+
+        def current(self, units):
+            return 1
+
+    class Sdcard:
+
+        def __init__(self):
+            pass
+
+        def is_inserted(self):
+            return True
+
+        def filesize(self, filename: str):
+            return 0
+
+        def loadfile(self, filename: str, *args):
+            return bytearray([0])
+
+        def savefile(self, filename: str, *args):
+            return 0
+
+        def appendfile(self, filename: str, *args):
+            return 0
+
+        def size(self, filename: str):
+            return 0
+
+        def exists(self, *args):
+            return False
+
     class Lcd:
         '''模拟VEX V5屏幕'''
         __slots__ = (
@@ -380,11 +423,10 @@ def run_code(ev):
     '''运行用户代码'''
     # 停止之前的执行
     stop_flag['value'] = True
-        # 在JavaScript中重置计时器
+    # 在JavaScript中重置计时器
     # window.resetTimer = window.resetTimer or None
     # if window.resetTimer:
     #     window.resetTimer()
-
 
     async def execute_code():
         try:
