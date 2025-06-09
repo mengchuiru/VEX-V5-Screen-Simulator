@@ -1,127 +1,132 @@
-# VEX-V5 屏幕模拟器
+# VEX-V5 Screen Simulator
 
-点击访问 [VEX-V5屏幕模拟器](https://mengchuiru.github.io/VEX-V5-Screen-Simulator) 开始使用。
+**[[English]](README.md)**
+**[[中文]](README_zh.md)**
 
-![VEX-V5 屏幕模拟器截图](./assets/screenshot.png)
+Click to access the [VEX-V5 Screen Simulator](https://mengchuiru.github.io/VEX-V5-Screen-Simulator) to get started.
 
-## 概述
+![Screenshot of VEX-V5 Screen Simulator](./assets/screenshot.png)
 
-VEX-V5 屏幕模拟器是一个基于浏览器的交互式工具，允许用户通过Python编程模拟VEX V5机器人的屏幕显示和交互功能。该项目提供了完整的开发环境，包括代码编辑器、实时预览和输出控制台，是VEX机器人开发者和教育者的理想工具。
+## Overview
 
-## 主要功能
+The **VEX-V5 Screen Simulator** is a browser-based interactive tool that allows users to simulate the screen display and interaction features of the VEX V5 robot using Python programming. The project provides a complete development environment, including a code editor, real-time preview, and output console—making it an ideal tool for VEX robotics developers and educators.
 
-- **实时屏幕模拟**：480x240像素的VEX V5屏幕模拟
-- **Python编程环境**：内置代码编辑器支持Python语法高亮和自动完成
-- **示例程序**：提供多个预置示例程序，包括：
-  - 旋转立方体
-  - 打砖块游戏
-  - 代码雨效果
-- **触摸交互**：支持画布上的触摸/鼠标交互
-- **运行计时器**：显示程序运行时间
-- **输出控制台**：实时显示程序输出和错误信息
-- **文件管理**：支持上传本地Python文件
+## Key Features
 
-## 技术栈
+- **Real-Time Screen Simulation**: Simulates a 480x240 pixel VEX V5 screen.
+- **Python Programming Environment**: Built-in code editor with Python syntax highlighting and auto-completion.
+- **Example Programs**: Includes multiple preloaded example programs such as:
+  - Rotating Cube
+  - Brick Breaker Game
+  - Code Rain Effect
+- **Touch Interaction**: Supports touch/mouse interaction on the canvas.
+- **Runtime Timer**: Displays program execution time.
+- **Output Console**: Shows real-time output and error messages from the program.
+- **File Management**: Allows uploading local Python files.
 
-- **前端框架**：纯HTML/CSS/JavaScript
-- **Python运行时**：Brython (浏览器中运行Python)
-- **代码编辑器**：CodeMirror
-- **图形渲染**：HTML5 Canvas
+## Technology Stack
 
-## 快速开始
+- **Frontend Framework**: Pure HTML/CSS/JavaScript
+- **Python Runtime**: Brython (Python in the browser)
+- **Code Editor**: CodeMirror
+- **Graphics Rendering**: HTML5 Canvas
 
-### 在线使用
+## Quick Start
 
-直接访问 [VEX-V5屏幕模拟器](https://mengchuiru.github.io/VEX-V5-Screen-Simulator) 开始使用。
+### Use Online
 
-### 本地运行
+Simply visit the [VEX-V5 Screen Simulator](https://mengchuiru.github.io/VEX-V5-Screen-Simulator) to start using the tool directly in your browser.
 
-1. 克隆仓库：
-```bash
-git clone https://github.com/mengchuiru/vex-v5-simulator.git
-cd vex-v5-simulator
-```
+### Run Locally
 
-2. 启动本地服务器：
-```bash
-# 使用Python内置服务器
-python -m http.server 8000
-```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/mengchuiru/vex-v5-simulator.git
+   cd vex-v5-simulator
+   ```
 
-3. 在浏览器中打开：
-```
-http://localhost:8000
-```
+2. Start a local server:
+   ```bash
+   # Using Python's built-in server
+   python -m http.server 8000
+   ```
 
-## 使用指南
+3. Open your browser and go to:
+   ```
+   http://localhost:8000
+   ```
 
-### 界面介绍
+## User Guide
 
-1. **屏幕模拟区域**：显示VEX V5屏幕模拟效果
-2. **代码编辑器**：编写和编辑Python代码
-3. **控制按钮**：
-   - ▶ 运行代码
-   - ⏹ 停止运行并清空画布
-4. **示例选择器**：加载预置示例程序
-5. **输出控制台**：显示程序输出和错误信息
-6. **运行计时器**：显示程序运行时间
+### Interface Overview
 
-### 基本操作
+1. **Screen Simulation Area**: Displays the simulated VEX V5 screen.
+2. **Code Editor**: Where you write and edit Python code.
+3. **Control Buttons**:
+   - ▶ Run code
+   - ⏹ Stop and clear the canvas
+4. **Example Selector**: Load predefined sample programs.
+5. **Output Console**: Displays runtime output and errors.
+6. **Runtime Timer**: Shows how long the program has been running.
 
-1. 从示例选择器中选择一个示例程序
-2. 点击▶按钮运行程序
-3. 与画布交互（触摸/点击）
-4. 点击⏹按钮停止程序
-5. 修改代码后再次运行查看效果
+### Basic Operations
 
-### 自定义开发
+1. Select a sample program from the Example Selector.
+2. Click the ▶ button to run the program.
+3. Interact with the canvas (touch/click).
+4. Click the ⏹ button to stop and reset the simulation.
+5. Modify the code and re-run to see changes.
 
-编写Python代码使用以下API：
+### Custom Development
+
+You can write Python code using the following API:
 
 ```python
 from vex import *
 
-# 初始化大脑
+# Initialize the brain
 brain = Brain()
 
-# 设置颜色
+# Set colors
 brain.screen.set_pen_color(Color.RED)
 brain.screen.set_fill_color(Color.BLUE)
 
-# 绘制图形
+# Draw shapes
 brain.screen.draw_rectangle(100, 100, 50, 50)
 brain.screen.draw_circle(200, 120, 30)
 
-# 显示文本
-brain.screen.print_at("Hello VEX!", 50, 50)
+# Display text
+brain.screen.print_at("Hello VEX!", x=50, y=50)
 
-# 等待
+# Wait
 wait(1000)
 
-# 清屏
+# Clear screen
 brain.screen.clear_screen()
 ```
 
-## 贡献指南
+## Contributing
 
-欢迎贡献代码！请遵循以下步骤：
+Contributions are welcome! Please follow these steps:
 
-1. Fork 项目仓库
-2. 创建特性分支 (`git checkout -b feature/your-feature`)
-3. 提交更改 (`git commit -am 'Add some feature'`)
-4. 推送到分支 (`git push origin feature/your-feature`)
-5. 创建Pull Request
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -am 'Add some feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a Pull Request.
 
-## 许可证
+## License
 
-本项目采用 [MIT许可证](LICENSE)。
+This project is licensed under the [MIT License](LICENSE).
 
-## 联系方式
+## Contact
 
-如有任何问题或建议，请联系：
-- 邮箱：mengchuiru@qq.com
-- 项目地址：https://github.com/mengchuiru/vex-v5-simulator
+If you have any questions or suggestions, feel free to reach out:
+- Email: mengchuiru@qq.com
+- Project Repository: [GitHub - vex-v5-simulator](https://github.com/mengchuiru/vex-v5-simulator)
 
 ---
 
-**让VEX机器人编程更直观、更高效！** 🚀
+**Make VEX Robotics Programming More Intuitive and Efficient!** 🚀
+
+--- 
