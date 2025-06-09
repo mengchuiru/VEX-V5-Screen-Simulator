@@ -9,7 +9,12 @@ Click to access the [VEX-V5 Screen Simulator](https://mengchuiru.github.io/VEX-V
 
 ## Overview
 
-The **VEX-V5 Screen Simulator** is a browser-based interactive tool that allows users to simulate the screen display and interaction features of the VEX V5 robot using Python programming. The project provides a complete development environment, including a code editor, real-time preview, and output console—making it an ideal tool for VEX robotics developers and educators.
+The **VEX-V5 Screen Simulator** is a browser-based interactive tool that allows users to simulate the screen display and interaction features of the VEX V5 robot using Python programming. The project provides a complete development environment, including a code editor, real-time preview, and output console—making it an ideal tool for VEX robotics beginners and educators.
+
+You can use the VEX class：
+`Brain` 
+`FontType` 
+`Color`
 
 ## Key Features
 
