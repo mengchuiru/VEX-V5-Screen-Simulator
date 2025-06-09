@@ -22,8 +22,8 @@ You can use the VEX class：
 - **Python Programming Environment**: Built-in code editor with Python syntax highlighting and auto-completion.
 - **Example Programs**: Includes multiple preloaded example programs such as:
   - Rotating Cube
-  - Brick Breaker Game
-  - Code Rain Effect
+  - Brick Breaker
+  - Code Rain
 - **Touch Interaction**: Supports touch/mouse interaction on the canvas.
 - **Runtime Timer**: Displays program execution time.
 - **Output Console**: Shows real-time output and error messages from the program.
