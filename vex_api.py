@@ -415,6 +415,7 @@ async def wait(ms):
     start_time = javascript.Date.now()
     while (javascript.Date.now() - start_time) < ms:
         if stop_flag['value']:
+            sys.exit("Program stopped by user")
             raise SystemExit("Program stopped by user")
         await aio.sleep(0.01)
 
