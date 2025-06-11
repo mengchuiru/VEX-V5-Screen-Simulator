@@ -12,8 +12,8 @@
     --output-text: #e0e0e0;
 
     /* 尺寸变量 */
-    --simulator-width: 710px;
-    --simulator-height: 510px;
+    --simulator-width: 720px;
+    --simulator-height: 500px;
     --canvas-width: 480px;
     --canvas-height: 240px;
     --header-height: 60px;
@@ -21,9 +21,9 @@
     --simulator-header-height: 40px;
 
     /* 位置比例 */
-    --canvas-top-ratio: 0.305;
+    --canvas-top-ratio: 0.31;
     /* 135/510 ≈ 0.265 */
-    --canvas-left-ratio: 0.118;
+    --canvas-left-ratio: 0.123;
     /* 115/710 ≈ 0.162 */
     --canvas-width-ratio: 0.676;
     /* 480/710 ≈ 0.676 */
@@ -113,7 +113,7 @@ main {
     position: relative;
     width: 100%;
     height: var(--simulator-height);
-    background: url('./assets/brain.png') center/cover;
+    background: url('./assets/brain.svg') center/cover;
     flex-shrink: 0;
 }
 
