@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>VEX-V5 Screen Simulator</title>
+    <!-- 预加载 Brython -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.min.js" as="script">
     <!-- icon -->
     <link rel="icon" href="assets/v5Red.svg" type="image/x-icon">
 
@@ -12,11 +15,22 @@
     <link rel="stylesheet" href="assets/dracula.min.css">
     <link rel="stylesheet" href="style.css?v=2.4">
 
-    <!-- 合并脚本加载 -->
+    <!-- 加载 Brython -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.min.js" defer></script> -->
+
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/brython/3.13.1/brython.min.js" defer></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/brython/3.13.1/brython_stdlib.min.js" defer></script> -->
+
+
     <script src="assets/brython.min.js"></script>
     <script src="assets/brython_stdlib.min.js"></script>
+
+    <!-- 合并脚本加载 -->
     <script src="assets/codemirror.min.js"></script>
     <script src="assets/python.min.js"></script>
+
+
 </head>
 
 <body onload="brython()">
@@ -39,7 +53,8 @@
             <!-- 代码编辑器区域 -->
             <div class="code-editor">
                 <div class="editor-header">
-                    <span style="font-size: 20px;"> <img src="assets/python_logo.svg" alt="python" width="20" height="20">Python</span>
+                    <span style="font-size: 20px;"> <img src="assets/python_logo.svg" alt="python" width="20"
+                            height="20">Python</span>
                     <select id="exampleSelector" class="example-selector">
                         <option value="upLoad">📁 UpLoad </option>
                         <option value="Rotating_Cube" selected>📄Rotating_Cube</option>

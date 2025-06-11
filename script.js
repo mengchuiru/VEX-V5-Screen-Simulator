@@ -1,5 +1,7 @@
 // script.js
 document.addEventListener('DOMContentLoaded', () => {
+
+
     // 初始化编辑器配置
     const EDITOR_CONFIG = {
         mode: 'python',
@@ -41,26 +43,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // 计时器变量
     let startTime = 0;
     let timerInterval = null;
-    
+
     // 更新运行时间显示
     function updateRunTime() {
         const elapsed = Date.now() - startTime;
-        const minutes = Math.floor(elapsed / 60000%60);
+        const minutes = Math.floor(elapsed / 60000 % 60);
         const seconds = Math.floor((elapsed % 60000) / 1000);
-        runTimeElement.textContent = 
+        runTimeElement.textContent =
             `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
-    
+
     // 开始计时
     function startTimer() {
         stopTimer(); // 确保之前的计时器被清除
         runTimeElement.textContent = '00:00';
-    
+
         runTimeContainer.style.display = 'block';
         startTime = Date.now();
         timerInterval = setInterval(updateRunTime, 1000);
     }
-    
+
     // 停止计时
     function stopTimer() {
         if (timerInterval) {
@@ -143,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fileInput.value = '';
         }
     });
+    document.getElementById('status').textContent = '⏳ 加载运行环境...';
 
     // 运行按钮点击事件 - 开始计时
     document.getElementById('runBtn').addEventListener('click', () => {
@@ -151,6 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // 停止按钮点击事件 - 停止计时
     document.getElementById('resetBtn').addEventListener('click', () => {
         stopTimer();
+    });
+
+    // 在 Brython 加载完成后
+    window.addEventListener('load', () => {
+        document.getElementById('status').textContent = '✅ 环境就绪';
     });
     // 初始加载默认示例
     selectorElement.dispatchEvent(new Event('change'));
