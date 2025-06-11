@@ -139,9 +139,11 @@ while True:
         if game_over:  # 如果游戏结束
             brain.screen.print_at("Game Over", WIDTH //
                                   2 - 120, HEIGHT // 2 + 20)  # 显示游戏结束
+            wait(1000)
         else:  # 如果游戏胜利
             brain.screen.print_at("Game WIN", WIDTH //
                                   2 - 120, HEIGHT // 2 + 20)  # 显示游戏胜利
+            wait(1000)
         brain.screen.render()  # 刷新屏幕
         if brain.screen.pressing():  # 等待按下屏幕
             # 设置初始变量
@@ -155,7 +157,7 @@ while True:
             pabble_x = (WIDTH - PABBLE_WIDTH) // 2
             game_over = False
             brick_num = BRICK_ROW * BRICK_COL
-        wait(500)  # 等待0.5秒
+        wait(50)  # 等待0.5秒
         continue
 
     brain.screen.clear_screen()  # 清屏
